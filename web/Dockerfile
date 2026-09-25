@@ -17,7 +17,10 @@ RUN npm run build
 # nginx-unprivileged: corre como el usuario 101 y escucha en 8080. Si alguien
 # lograra ejecutar algo dentro del contenedor, no sería root. Los archivos
 # quedan de root y solo lectura para él: tampoco podría reescribir el sitio.
-FROM nginxinc/nginx-unprivileged:1.28-alpine
+# Rama estable vigente de nginx (una nueva cada abril). La 1.28 quedó sin
+# soporte en 2026 y ya no recibe parches. La variante `slim` no trae njs ni
+# módulos extra: menos paquetes, menos superficie para CVE.
+FROM nginxinc/nginx-unprivileged:1.30-alpine-slim
 
 # La imagen base se publica cada tanto, pero Alpine saca parches de seguridad
 # a diario: sin esto Trivy encuentra CVE ya corregidos y frena la Integración.
