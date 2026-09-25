@@ -53,7 +53,10 @@ export function Projects() {
                   ))}
                 </ul>
                 {links.map((link) => (
-                  <ButtonLink key={link.url} variant="outline" href={link.url}>
+                  // Violeta como «Contáctame»: ver el proyecto en vivo es la
+                  // acción que más convence, y en contorno se perdía entre las
+                  // insignias de tecnologías.
+                  <ButtonLink key={link.url} variant="primary" href={link.url}>
                     {link.label}
                     <span className="visually-hidden"> de {project.name}</span>
                     <Icon name="external" />

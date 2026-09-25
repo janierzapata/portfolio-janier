@@ -40,7 +40,8 @@
   --glass-wash-hover: rgba(186, 214, 247, 0.12);
   --glass-surface: rgba(186, 214, 247, 0.03); /* Frosted Glass */
   --glass-deep: rgba(5, 6, 15, 0.97); /* Deep Glass */
-  --glass-nav: rgba(5, 6, 15, 0.72); /* barra fija: deja ver la rejilla */
+  /* Barra fija: casi opaca, para que el texto que pasa debajo no se lea. */
+  --glass-nav: rgba(5, 6, 15, 0.9);
   --glass-badge: rgba(199, 211, 234, 0.12); /* Luminous Fill */
   --grid-line: rgba(186, 215, 247, 0.06);
 
