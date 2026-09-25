@@ -4,11 +4,21 @@ updates:
     directory: /web
     schedule: { interval: weekly }
     groups:
-      dependencias:
-        patterns: ['*']
+      # Parches y menores juntos en un solo PR; las mayores llegan por
+      # separado porque cada una puede romper algo distinto.
+      menores:
+        update-types: [minor, patch]
+    ignore:
+      # typescript-eslint todavía no soporta TypeScript 7.
+      - dependency-name: typescript
+        versions: ['>=7']
   - package-ecosystem: docker
     directory: /web
     schedule: { interval: weekly }
+    ignore:
+      # Node solo en versiones LTS (pares). La 25 es de vida corta.
+      - dependency-name: node
+        update-types: [version-update:semver-major]
   - package-ecosystem: github-actions
     directory: /
     schedule: { interval: weekly }

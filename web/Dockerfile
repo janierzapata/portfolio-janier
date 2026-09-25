@@ -17,7 +17,7 @@ RUN npm run build
 # nginx-unprivileged: corre como el usuario 101 y escucha en 8080. Si alguien
 # lograra ejecutar algo dentro del contenedor, no sería root. Los archivos
 # quedan de root y solo lectura para él: tampoco podría reescribir el sitio.
-FROM nginxinc/nginx-unprivileged:1.27-alpine3.21
+FROM nginxinc/nginx-unprivileged:1.28-alpine3.21
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY seguridad.inc /etc/nginx/conf.d/seguridad.inc

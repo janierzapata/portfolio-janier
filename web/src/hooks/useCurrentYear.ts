@@ -1,13 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 
-// El HTML se prerenderiza en el build, así que el primer render del navegador
-// tiene que usar el MISMO año que el build para que la hidratación calce.
-// Justo después se cambia al año real: si el sitio sigue publicado al pasar
-// enero, los años de experiencia y el © se actualizan solos, sin redesplegar.
+// El año no cambia mientras la página está abierta: no hay nada a qué
+// suscribirse.
+const subscribe = () => () => {};
+const getSnapshot = () => new Date().getFullYear();
+// El HTML se prerenderiza en el build, así que al hidratar React usa el MISMO
+// año que el build y la hidratación calza. Justo después toma el año real: si
+// el sitio sigue publicado al pasar enero, los años de experiencia y el ©
+// se actualizan solos, sin redesplegar.
+const getServerSnapshot = () => __BUILD_YEAR__;
+
 export function useCurrentYear(): number {
-  const [year, setYear] = useState<number>(__BUILD_YEAR__);
-  useEffect(() => {
-    setYear(new Date().getFullYear());
-  }, []);
-  return year;
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
