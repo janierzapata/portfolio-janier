@@ -8,12 +8,15 @@
 # VPS: Let's Encrypt valida por HTTP-01 y sin eso no emite el certificado (y
 # limita a cinco intentos fallidos por hora y dominio). Comprobar primero:
 #
-#   dig +short janier.controlapp.com.co
+#   dig +short janierzapata.com
+#   dig +short www.janierzapata.com
 #   curl -s ifconfig.me        # en el VPS: deben coincidir
 #
+# Si este bloque ya estaba en el Caddyfile con janier.controlapp.com.co,
+# REEMPLÁZALO entero por este, no lo agregues otra vez.
 
 # ── Portafolio ──────────────────────────────────────────────────────────────
-janier.controlapp.com.co {
+janierzapata.com {
 	encode zstd gzip
 	import seguras
 
@@ -39,4 +42,11 @@ janier.controlapp.com.co {
 			roll_keep 10
 		}
 	}
+}
+
+# El dominio canónico es uno solo: www y la dirección anterior redirigen con
+# 301, así los enlaces ya compartidos siguen sirviendo y Google no ve el mismo
+# sitio en tres direcciones.
+www.janierzapata.com, janier.controlapp.com.co {
+	redir https://janierzapata.com{uri} permanent
 }

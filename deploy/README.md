@@ -12,7 +12,7 @@ git tag release-1.0.0 ──▶ Despliegue ───┘──▶ scp compose+.en
 
 | Pieza      | Decisión                                              |
 |------------|-------------------------------------------------------|
-| Dominio    | `janier.controlapp.com.co` (Cloudflare en «Solo DNS») |
+| Dominio    | `janierzapata.com` (Hostinger); `www` y `janier.controlapp.com.co` redirigen con 301 |
 | Borde      | El Caddy de `/opt/proxy`, con CSP propia              |
 | Contenedor | `nginx-unprivileged`, puerto 8080, solo en la red `proxy` |
 | Carpeta    | `/opt/portfolio`                                      |
@@ -23,7 +23,8 @@ git tag release-1.0.0 ──▶ Despliegue ───┘──▶ scp compose+.en
 
 ```bash
 docker network ls | grep proxy          # la red del Caddy compartido
-dig +short janier.controlapp.com.co                      # debe dar la IP del VPS
+dig +short janierzapata.com                              # debe dar la IP del VPS
+dig +short www.janierzapata.com
 curl -s ifconfig.me
 ```
 
@@ -77,7 +78,7 @@ git push origin release-1.0.0
 
 ```bash
 docker ps --filter name=portfolio-web          # healthy
-curl -sI https://janier.controlapp.com.co | grep -iE 'content-security|strict-transport|x-frame|x-content'
+curl -sI https://janierzapata.com | grep -iE 'content-security|strict-transport|x-frame|x-content'
 ```
 
 Y una pasada en <https://securityheaders.com> y Lighthouse antes de compartir
