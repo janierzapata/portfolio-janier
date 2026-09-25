@@ -2,3 +2,8 @@ dist
 node_modules
 package-lock.json
 dist-ssr
+
+# Prettier no entiende la sintaxis de nginx: `seguridad.inc` lo toma por HTML
+# y lo reflujaba en párrafos, rompiendo la configuración sin avisar.
+*.inc
+nginx.conf

@@ -102,6 +102,10 @@ jobs:
           echo "$raiz" | grep -qi '^server: nginx/' && { echo "server_tokens expone la versión"; exit 1; }
           docker rm -f prueba
 
+      - name: Registro del contenedor si la prueba falló
+        if: failure()
+        run: docker logs prueba 2>&1 | tail -40 || true
+
       - name: Entrar a GHCR
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: docker/login-action@v4
