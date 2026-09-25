@@ -1,0 +1,115 @@
+name: Integración
+
+# Instala, comprueba tipos, lint y formato, compila, escanea la imagen con
+# Trivy y, al entrar a `main`, la publica en GHCR etiquetada con el SHA del
+# commit. Ese SHA es la bisagra con `deploy.yml`, que no construye nada.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  IMAGE: ghcr.io/${{ github.repository }}/web
+
+jobs:
+  web:
+    name: Web
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Instalar
+        run: npm ci
+      - name: Tipos
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Formato
+        run: npm run format:check
+      - name: Auditoría de dependencias
+        # Solo lo que viaja al navegador: una vulnerabilidad en una
+        # herramienta de build no llega a producción y no debe frenar el CI.
+        run: npm audit --omit=dev --audit-level=high
+      - name: Compilar
+        run: npm run build
+
+  imagen:
+    name: Imagen
+    runs-on: ubuntu-latest
+    needs: web
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+
+      # Se construye una vez y se carga en el runner: Trivy escanea
+      # exactamente la imagen que luego se publica, no una reconstrucción.
+      - name: Construir
+        uses: docker/build-push-action@v6
+        with:
+          context: ./web
+          load: true
+          tags: ${{ env.IMAGE }}:${{ github.sha }}
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,mode=max,scope=web
+
+      - name: Escanear con Trivy
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ env.IMAGE }}:${{ github.sha }}
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: '1'
+
+      - name: Probar la imagen
+        run: |
+          docker run -d --name prueba --read-only --tmpfs /tmp --cap-drop ALL \
+            -p 8080:8080 ${{ env.IMAGE }}:${{ github.sha }}
+          for i in $(seq 1 20); do
+            curl -sf http://localhost:8080/salud && break
+            sleep 1
+          done
+          # Las cabeceras de seguridad del contenedor tienen que estar, en la
+          # raíz y en /assets/ (nginx no las hereda entre locations).
+          raiz=$(curl -sI http://localhost:8080/)
+          asset=$(curl -s http://localhost:8080/ | grep -o '/assets/[^"]*\.js' | head -1)
+          assets=$(curl -sI "http://localhost:8080$asset")
+          for h in 'x-content-type-options: nosniff' 'x-frame-options: DENY' 'referrer-policy' 'permissions-policy'; do
+            echo "$raiz"   | grep -qi "$h" || { echo "falta $h en /";       exit 1; }
+            echo "$assets" | grep -qi "$h" || { echo "falta $h en $asset"; exit 1; }
+          done
+          echo "$raiz" | grep -qi '^server: nginx/' && { echo "server_tokens expone la versión"; exit 1; }
+          docker rm -f prueba
+
+      - name: Entrar a GHCR
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publicar
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          docker tag ${{ env.IMAGE }}:${{ github.sha }} ${{ env.IMAGE }}:main
+          docker push ${{ env.IMAGE }}:${{ github.sha }}
+          docker push ${{ env.IMAGE }}:main

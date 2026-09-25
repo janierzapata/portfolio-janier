@@ -1,0 +1,925 @@
+/*
+ * Estilos del sitio. Solo variables de tokens.css: si aquí aparece un hex,
+ * un tamaño o una sombra literal, va a tokens.css.
+ */
+
+/* ── Base ──────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* La navegación es fija: sin esto el ancla deja el título debajo de ella. */
+  scroll-padding-top: 5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--color-canvas);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+ol,
+figure {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-icon-accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-badge);
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space-16);
+  top: -100px;
+  z-index: 100;
+  padding: var(--space-8) var(--space-16);
+  border-radius: var(--radius-button);
+  background: var(--glass-deep);
+  box-shadow: var(--shadow-hairline-strong);
+  color: var(--color-text-strong);
+}
+.skip-link:focus {
+  top: var(--space-16);
+}
+
+/* ── Atmósfera: rejilla de plano + foco cónico ────────────────────────── */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 80px 80px;
+  background-position: center top;
+  /* La rejilla se desvanece hacia los bordes: es ambiente, no contenido. */
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 20%, #000 30%, transparent 75%);
+}
+
+.spotlight {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 900px;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--gradient-spotlight);
+  filter: blur(40px);
+  opacity: 0.8;
+  mask-image: linear-gradient(to bottom, #000 20%, transparent 90%);
+}
+
+/* ── Layout ────────────────────────────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+.section {
+  padding-block: calc(var(--section-gap) / 2);
+}
+
+.section-head {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-16);
+  max-width: var(--text-max);
+  margin: 0 auto var(--space-56);
+  text-align: center;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-heading-lg);
+  line-height: var(--leading-heading-lg);
+  color: var(--color-text-heading);
+  text-wrap: balance;
+}
+
+.section-lead {
+  font-size: var(--text-subheading);
+  line-height: var(--leading-subheading);
+  color: var(--color-text-muted);
+  text-wrap: pretty;
+}
+
+/* Etiqueta en mayúsculas flanqueada por líneas que se desvanecen */
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  width: 100%;
+  max-width: 480px;
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  font-weight: var(--weight-regular);
+  line-height: 1.2;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  font-feature-settings: 'tnum' 1;
+  color: var(--color-text-muted);
+  text-align: center;
+  text-wrap: balance;
+}
+.eyebrow::before,
+.eyebrow::after {
+  content: '';
+  /* Las líneas ceden espacio antes que el texto: en móvil la etiqueta
+     puede partirse en dos, pero nunca desbordar la pantalla. */
+  flex: 1 0 var(--space-16);
+  height: 1px;
+  background: var(--gradient-hairline);
+}
+
+/* ── Botones ───────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  min-height: 44px; /* objetivo táctil */
+  padding: var(--space-8) var(--space-20);
+  border: 0;
+  border-radius: var(--radius-button);
+  font: inherit;
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0;
+  cursor: pointer;
+  transition:
+    background-color var(--duration) var(--ease),
+    box-shadow var(--duration) var(--ease),
+    transform var(--duration) var(--ease);
+}
+.btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.btn--ghost {
+  background: var(--glass-wash);
+  box-shadow: var(--shadow-hairline);
+  color: var(--color-text-strong);
+}
+.btn--ghost:hover {
+  background: var(--glass-wash-hover);
+}
+
+.btn--outline {
+  background: transparent;
+  box-shadow: var(--shadow-hairline);
+  color: var(--color-text);
+}
+.btn--outline:hover {
+  box-shadow: var(--shadow-hairline-strong);
+  color: var(--color-text-strong);
+}
+
+/* El violeta es la única nota de color del sistema: una sola acción por vista. */
+.btn--primary {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  padding-inline: var(--space-24);
+}
+.btn--copy {
+  /* El texto cambia a «¡Correo copiado!»: ancho mínimo para que el botón
+     no salte ni empuje al de WhatsApp. */
+  min-width: 11.5rem;
+}
+.btn--primary:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-1px);
+}
+
+/* ── Insignias ─────────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-4) var(--space-8);
+  border-radius: var(--radius-badge);
+  background: var(--glass-badge);
+  box-shadow: var(--shadow-badge);
+  color: var(--color-text);
+  font-size: var(--text-caption);
+  line-height: var(--leading-caption);
+  font-weight: var(--weight-medium);
+}
+
+.badge-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+/* ── Tarjeta de vidrio ─────────────────────────────────────────────────── */
+.glass-card {
+  position: relative;
+  border-radius: var(--radius-card);
+  background: var(--glass-surface);
+  box-shadow: var(--shadow-card);
+  padding: var(--card-padding);
+}
+
+/* ── Navegación ────────────────────────────────────────────────────────── */
+.nav {
+  position: fixed;
+  inset: var(--space-16) 0 auto;
+  z-index: 50;
+  pointer-events: none;
+}
+.nav__bar {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-16);
+  max-width: 880px;
+  margin-inline: auto;
+  padding: var(--space-8) var(--space-8) var(--space-8) var(--space-20);
+  border-radius: var(--radius-button);
+  background: var(--glass-nav);
+  box-shadow: var(--shadow-hairline);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+}
+.nav__brand {
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+  white-space: nowrap;
+}
+.nav__links {
+  display: flex;
+  gap: var(--space-4);
+}
+.nav__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 var(--space-12);
+  border-radius: var(--radius-button);
+  font-size: var(--text-body-sm);
+  color: var(--color-text-helper);
+  transition:
+    color var(--duration) var(--ease),
+    background-color var(--duration) var(--ease);
+}
+.nav__links a:hover,
+.nav__links a[aria-current='true'] {
+  color: var(--color-text-strong);
+  background: var(--glass-wash);
+}
+.nav__toggle {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .nav {
+    inset-inline: var(--page-gutter);
+  }
+  .nav__toggle {
+    display: inline-flex;
+    min-height: 40px;
+    padding-inline: var(--space-16);
+  }
+  .nav__links {
+    position: absolute;
+    top: calc(100% + var(--space-8));
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    padding: var(--space-8);
+    border-radius: var(--radius-card);
+    /* Opaco del todo: con el 97 % del Deep Glass el titular del hero, que es
+       muy claro, se alcanza a leer detrás de las opciones. */
+    background: var(--color-canvas);
+    box-shadow: var(--shadow-modal);
+  }
+  .nav__links a {
+    min-height: 44px;
+    padding-inline: var(--space-16);
+  }
+  .nav__links[data-open='false'] {
+    display: none;
+  }
+}
+
+/* ── Inicio ────────────────────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  padding-top: calc(var(--space-120) + var(--space-40));
+  padding-bottom: calc(var(--section-gap) / 2);
+  text-align: center;
+}
+.hero__inner {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-24);
+}
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-wordmark);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  background: var(--gradient-skywash);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-wrap: balance;
+}
+.hero__role {
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-heading);
+  line-height: var(--leading-heading);
+  color: var(--color-text-heading);
+}
+.hero__tagline {
+  max-width: var(--text-max);
+  font-size: var(--text-subheading);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  text-wrap: pretty;
+}
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-12);
+  margin-top: var(--space-8);
+}
+
+/* Tarjetas flotantes en abanico: el «producto» de un DevOps es su pipeline */
+.hero__stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1.15fr 1fr;
+  align-items: center;
+  gap: var(--space-16);
+  max-width: 1040px;
+  margin: var(--space-56) auto 0;
+  text-align: left;
+}
+.float-card {
+  border-radius: var(--radius-card);
+  background: var(--glass-deep);
+  box-shadow: var(--shadow-modal);
+  padding: var(--space-20);
+  font-size: var(--text-body-sm);
+}
+.float-card--left {
+  transform: rotate(-4deg) translateY(24px);
+  opacity: 0.85;
+}
+.float-card--right {
+  transform: rotate(4deg) translateY(24px);
+  opacity: 0.85;
+}
+.float-card--center {
+  position: relative;
+  z-index: 1;
+  padding: var(--space-24);
+}
+.float-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+  margin-bottom: var(--space-16);
+  color: var(--color-text-heading);
+  font-weight: var(--weight-medium);
+}
+.float-card__meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--color-text-helper);
+}
+.steps {
+  display: grid;
+  gap: var(--space-8);
+}
+.step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  padding: var(--space-8) var(--space-12);
+  border-radius: var(--radius-input);
+  background: var(--glass-wash);
+  box-shadow: var(--shadow-hairline);
+  color: var(--color-text-muted);
+}
+.step__dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-icon);
+  background: var(--color-icon-accent);
+  box-shadow: var(--shadow-glow);
+}
+.step__time {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--color-text-helper);
+}
+.term {
+  display: block;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  line-height: 1.7;
+  color: var(--color-text-muted);
+  white-space: pre;
+  overflow: hidden;
+}
+.term__prompt {
+  color: var(--color-icon-accent);
+}
+.term__ok {
+  color: var(--color-text-heading);
+}
+
+@media (max-width: 900px) {
+  .hero__stage {
+    grid-template-columns: 1fr;
+    max-width: 440px;
+  }
+  .float-card--left,
+  .float-card--right {
+    display: none;
+  }
+}
+
+/* ── Sobre mí ──────────────────────────────────────────────────────────── */
+.about {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: var(--space-48);
+  align-items: start;
+}
+.about__identity {
+  display: grid;
+  gap: var(--space-24);
+  justify-items: start;
+}
+.about__facts {
+  display: grid;
+  gap: var(--space-8);
+  color: var(--color-text-helper);
+  font-size: var(--text-body-sm);
+}
+.about__facts strong {
+  display: block;
+  /* Mismo tamaño e interlineado que el párrafo de al lado: así la primera
+     línea de las dos columnas queda en la misma altura. */
+  font-size: var(--text-subheading);
+  line-height: 1.6;
+  color: var(--color-text-heading);
+  font-weight: var(--weight-medium);
+}
+.about__education {
+  display: grid;
+  gap: var(--space-12);
+}
+.about__education h3 {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-text-helper);
+}
+.about__education ul {
+  display: grid;
+  gap: var(--space-12);
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body-sm);
+}
+.about__education strong {
+  display: block;
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+}
+.about__education span {
+  color: var(--color-text-helper);
+}
+.about__body {
+  display: grid;
+  gap: var(--space-16);
+  color: var(--color-text-muted);
+  font-size: var(--text-subheading);
+  line-height: 1.6;
+}
+.approach {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--element-gap);
+  margin-top: var(--space-56);
+}
+.approach h3 {
+  margin-bottom: var(--space-8);
+  font-size: var(--text-subheading);
+  line-height: var(--leading-subheading);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-heading);
+}
+.approach p {
+  color: var(--color-text-helper);
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body-sm);
+}
+.approach__index {
+  display: block;
+  margin-bottom: var(--space-16);
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--color-icon-accent);
+}
+
+@media (max-width: 860px) {
+  .about,
+  .approach {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Proyectos ─────────────────────────────────────────────────────────── */
+.projects {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--element-gap);
+}
+.project {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-20);
+  transition: box-shadow var(--duration) var(--ease);
+}
+.project:hover {
+  box-shadow:
+    var(--shadow-card),
+    inset 0 0 0 1px var(--glass-edge);
+}
+/* El primer proyecto ocupa el ancho completo en escritorio: da un punto de
+   entrada a la cuadrícula en vez de cinco tarjetas iguales. */
+.project--featured {
+  grid-column: 1 / -1;
+}
+.project--featured .project__body {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+/* Con un número par de proyectos el último queda solo en su fila: se estira
+   como el destacado para que la cuadrícula cierre sin un hueco. */
+.projects > .project:last-child:nth-child(even) {
+  grid-column: 1 / -1;
+}
+.projects > .project:last-child:nth-child(even) .project__body {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.project__kind {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-text-helper);
+}
+.project__name {
+  margin-top: var(--space-8);
+  font-family: var(--font-display);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-heading);
+  line-height: var(--leading-heading);
+  color: var(--color-text-heading);
+}
+.project__body {
+  display: grid;
+  gap: var(--space-16);
+}
+.project__body dt {
+  margin-bottom: var(--space-4);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+  color: var(--color-icon-accent);
+}
+.project__body dd {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body-sm);
+}
+.inline-link {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-decoration-color: var(--glass-edge-strong);
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--duration) var(--ease);
+}
+.inline-link:hover {
+  color: var(--color-text-strong);
+  text-decoration-color: var(--color-icon-accent);
+}
+.project__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-16);
+  margin-top: auto;
+}
+
+@media (max-width: 860px) {
+  .projects,
+  .project--featured .project__body,
+  .projects > .project:last-child:nth-child(even) .project__body {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Habilidades ───────────────────────────────────────────────────────── */
+.skills {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--element-gap);
+}
+.skill {
+  display: grid;
+  gap: var(--space-16);
+  align-content: start;
+}
+.icon-tile {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-icon);
+  background: var(--glass-wash);
+  box-shadow: var(--shadow-modal);
+  color: var(--color-text);
+}
+.icon-tile svg {
+  width: 24px;
+  height: 24px;
+}
+.skill h3 {
+  font-size: var(--text-subheading);
+  line-height: var(--leading-subheading);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-heading);
+}
+.skill ul {
+  display: grid;
+  gap: var(--space-4);
+  color: var(--color-text-helper);
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body-sm);
+}
+
+.certs {
+  margin-top: var(--space-56);
+}
+.certs h3 {
+  margin-bottom: var(--space-16);
+  font-size: var(--text-heading-sm);
+  line-height: var(--leading-heading-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-heading);
+}
+.certs ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--element-gap);
+}
+.certs li span {
+  display: block;
+  color: var(--color-text-helper);
+  font-size: var(--text-body-sm);
+}
+
+@media (max-width: 1000px) {
+  .skills {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+/* En celular, ocho tarjetas altas con una herramienta por línea eran varias
+   pantallas de scroll casi vacío. Aquí cada tarjeta se compacta: icono y
+   título en una fila, y las herramientas como insignias que fluyen. */
+@media (max-width: 640px) {
+  .skills {
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+  }
+  .skill {
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    column-gap: var(--space-12);
+    row-gap: var(--space-16);
+    padding: var(--space-20);
+  }
+  .skill .icon-tile {
+    width: 40px;
+    height: 40px;
+  }
+  .skill .icon-tile svg {
+    width: 20px;
+    height: 20px;
+  }
+  .skill ul {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+  }
+  /* Mismo aspecto que .badge; se repite aquí porque en escritorio estos
+     elementos son una lista simple, no insignias. */
+  .skill li {
+    padding: var(--space-4) var(--space-8);
+    border-radius: var(--radius-badge);
+    background: var(--glass-badge);
+    box-shadow: var(--shadow-badge);
+    color: var(--color-text);
+    font-size: var(--text-caption);
+    line-height: var(--leading-caption);
+    font-weight: var(--weight-medium);
+  }
+}
+
+/* ── Experiencia ───────────────────────────────────────────────────────── */
+.timeline {
+  position: relative;
+  display: grid;
+  gap: var(--space-32);
+  max-width: 880px;
+  margin-inline: auto;
+  padding-left: var(--space-40);
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--glass-edge-strong), transparent);
+}
+.timeline__item {
+  position: relative;
+}
+.timeline__marker {
+  position: absolute;
+  left: calc(-1 * var(--space-40) + 4px);
+  top: calc(var(--card-padding) + 4px);
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-icon);
+  background: var(--color-canvas);
+  box-shadow:
+    inset 0 0 0 1px var(--glass-edge-strong),
+    var(--shadow-glow);
+}
+.timeline__when {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-text-helper);
+}
+.timeline__title {
+  margin-top: var(--space-8);
+  font-size: var(--text-heading-sm);
+  line-height: var(--leading-heading-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-heading);
+}
+.timeline__company {
+  color: var(--color-text-muted);
+}
+.timeline__summary {
+  margin-top: var(--space-12);
+  color: var(--color-text-muted);
+}
+.timeline__highlights {
+  display: grid;
+  gap: var(--space-8);
+  margin-top: var(--space-16);
+  color: var(--color-text-helper);
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body-sm);
+}
+.timeline__highlights li {
+  position: relative;
+  padding-left: var(--space-20);
+}
+.timeline__highlights li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0.6em;
+  width: 8px;
+  height: 1px;
+  background: var(--color-icon-accent);
+}
+
+/* ── Contacto ──────────────────────────────────────────────────────────── */
+.contact {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-24);
+  max-width: 720px;
+  margin-inline: auto;
+  padding: var(--space-56) var(--space-32);
+  text-align: center;
+}
+.contact__primary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-12);
+}
+.contact__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-12);
+}
+
+@media (max-width: 520px) {
+  .contact {
+    padding: var(--space-40) var(--space-20);
+  }
+}
+
+/* ── Pie ───────────────────────────────────────────────────────────────── */
+.footer {
+  padding-block: var(--space-48);
+  color: var(--color-text-helper);
+  font-size: var(--text-caption);
+  text-align: center;
+}

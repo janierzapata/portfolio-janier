@@ -1,0 +1,36 @@
+# Portafolio en el VPS.
+#
+# No construye nada: levanta la imagen que Integración ya publicó en GHCR,
+# identificada por el SHA del commit. Lo copia el workflow de despliegue junto
+# con el `.env`; el servidor no necesita el repositorio ni toolchain de build.
+#
+# Sin `ports`: el 80 y el 443 los tiene `proxy_caddy`, que alcanza este
+# contenedor por nombre a través de la red `proxy`.
+#
+# A mano, en el VPS:
+#   cd /opt/portfolio && docker compose -f docker-compose.prod.yml up -d
+services:
+  web:
+    image: ghcr.io/${GITHUB_REPOSITORY:?falta GITHUB_REPOSITORY}/web:${IMAGE_TAG:?falta IMAGE_TAG}
+    container_name: portfolio-web
+    restart: unless-stopped
+    # Un sitio estático no escribe en disco: sistema de archivos de solo
+    # lectura, sin capacidades y sin escalar privilegios. Nginx solo necesita
+    # /tmp para sus temporales y el pid.
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 64m
+    pids_limit: 64
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+    networks: [proxy]
+
+networks:
+  # La del proxy del servidor, creada a mano: `docker network create proxy`.
+  proxy:
+    external: true
+    name: ${PROXY_NETWORK:-proxy}

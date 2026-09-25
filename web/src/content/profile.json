@@ -1,0 +1,65 @@
+{
+  "name": "Janier Zapata",
+  "role": "DevOps & Full-stack Engineer",
+  "eyebrow": "Cali, Colombia",
+  "tagline": "Diseño, automatizo y opero la infraestructura donde corren las aplicaciones, y también las construyo.",
+  "location": "Cali, Colombia",
+  "careerStartYear": 2021,
+  "about": [
+    "Soy ingeniero de sistemas con {years} años de experiencia. Empecé como desarrollador full-stack y hoy me dedico a DevOps e infraestructura en la nube: gestiono entornos multinube en AWS y Azure, automatizo con Terraform y Ansible/AWX, y construyo pipelines de CI/CD con GitHub Actions, Azure DevOps y Jenkins.",
+    "No he dejado el desarrollo: construyo backends con NestJS, Spring Boot y Django, y frontends con Angular y React, en arquitecturas de microservicios. Eso me deja ver un sistema completo, desde el commit hasta el contenedor que responde en producción."
+  ],
+  "approach": [
+    {
+      "title": "Seguridad desde el primer commit",
+      "text": "Cabeceras, CSP, secretos fuera de git y contenedores sin root se deciden al empezar, no antes de salir."
+    },
+    {
+      "title": "Producción es lo que pasó por CI",
+      "text": "El servidor no compila ni clona: recibe la imagen exacta que ya se probó, identificada por el SHA del commit."
+    },
+    {
+      "title": "Documentar el porqué",
+      "text": "Un comentario que explica la decisión le ahorra a la siguiente persona repetir el error que la motivó."
+    }
+  ],
+  "contact": {
+    "heading": "¿Hablamos?",
+    "text": "Si tienes un proyecto, una infraestructura que ordenar o una vacante, escríbeme por correo o por WhatsApp.",
+    "email": "janiier2000stiiven@gmail.com",
+    "emailSubject": "Contacto desde tu portafolio",
+    "emailBody": "Hola Janier, vi tu portafolio y me gustaría hablar contigo sobre ",
+    "whatsapp": {
+      "number": "573015258391",
+      "message": "Hola Janier, vi tu portafolio y me gustaría hablar contigo."
+    },
+    "cv": {
+      "label": "Descargar hoja de vida",
+      "url": "/cv/Janier-Zapata-CV.pdf",
+      "fileName": "Janier-Zapata-CV.pdf"
+    },
+    "links": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/janier-stiven-zapata-garcia-25a601140"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/janierzapata"
+      }
+    ]
+  },
+  "education": [
+    {
+      "title": "Ingeniero de Sistemas",
+      "school": "Institución Universitaria Antonio José Camacho",
+      "year": "2023"
+    },
+    {
+      "title": "Bachiller Técnico Electricista",
+      "school": "I. E. Técnico Industrial Antonio José Camacho",
+      "year": "2017"
+    }
+  ],
+  "languages": ["Español (nativo)", "Inglés (B1)", "Portugués (A1)"]
+}

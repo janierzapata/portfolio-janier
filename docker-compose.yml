@@ -1,0 +1,17 @@
+# Probar en local la misma imagen que irá a producción.
+#   docker compose up --build      → http://localhost:8080
+# Para trabajar con recarga en caliente: `cd web && npm run dev`.
+services:
+  web:
+    build: ./web
+    image: portfolio-janier-web:local
+    container_name: portfolio-web
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    ports:
+      # Solo en el loopback: nada de exponerlo a la red de la oficina.
+      - "${PUERTO:-127.0.0.1:8080}:8080"

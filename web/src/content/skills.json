@@ -1,0 +1,63 @@
+{
+  "groups": [
+    {
+      "id": "cloud",
+      "title": "Nube",
+      "icon": "cloud",
+      "items": [
+        "AWS · EC2, RDS, S3, Session Manager",
+        "Azure · AKS, App Services",
+        "Administración de VPS"
+      ]
+    },
+    {
+      "id": "containers",
+      "title": "Contenedores",
+      "icon": "container",
+      "items": ["Docker", "Kubernetes", "Harbor", "GHCR"]
+    },
+    {
+      "id": "cicd",
+      "title": "CI/CD",
+      "icon": "pipeline",
+      "items": ["GitHub Actions", "Azure DevOps", "Jenkins", "Trivy"]
+    },
+    {
+      "id": "iac",
+      "title": "IaC y automatización",
+      "icon": "code",
+      "items": ["Terraform", "Ansible", "AWX", "n8n"]
+    },
+    {
+      "id": "servers",
+      "title": "Servidores y red",
+      "icon": "server",
+      "items": ["Linux · Ubuntu, CentOS", "Nginx", "Traefik", "Caddy"]
+    },
+    {
+      "id": "architecture",
+      "title": "Arquitectura",
+      "icon": "shield",
+      "items": ["Microservicios", "Micro frontends", "Kafka", "Eureka · Consul"]
+    },
+    {
+      "id": "backend",
+      "title": "Backend",
+      "icon": "database",
+      "items": [
+        "Node.js · NestJS",
+        "Java · Spring Boot",
+        "Python · Django",
+        ".NET · Go · GraphQL",
+        "PostgreSQL · MySQL · MongoDB · Redis"
+      ]
+    },
+    {
+      "id": "frontend",
+      "title": "Frontend",
+      "icon": "layout",
+      "items": ["Angular", "React · React Native", "Next.js", "Vue"]
+    }
+  ],
+  "certifications": []
+}

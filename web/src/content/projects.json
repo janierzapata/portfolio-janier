@@ -1,0 +1,92 @@
+[
+  {
+    "id": "academia-francia",
+    "name": "Academia Francia",
+    "kind": "Plataforma académica · microservicios",
+    "problem": "Una academia de belleza y diseño gestionaba inscripciones, cartera y pagos de estudiantes a mano.",
+    "solution": "Sitio público con catálogo e inscripción, portal del estudiante con pagos en línea por [TuCompra](https://tucompra.com.co/) y un panel administrativo, detrás de un gateway que enruta a tres servicios.",
+    "result": "El proyecto más grande y el que más tiempo lleva en producción: servicios separados por dominio —información, inscripciones y pagos— con migraciones versionadas en Flyway, en un monorepo NX.",
+    "stack": ["Next.js", "NestJS", "TypeORM", "PostgreSQL", "Flyway", "TuCompra"],
+    "links": [
+      {
+        "label": "Visitar sitio",
+        "url": "https://academiafrancia.com.co"
+      }
+    ]
+  },
+  {
+    "id": "academia-francia-chatbot",
+    "name": "Chatbot de WhatsApp — Academia Francia",
+    "kind": "Automatización · IA conversacional",
+    "problem": "Las preguntas por WhatsApp sobre programas, horarios y procedimientos llegaban a toda hora y dependían de que alguien de la academia estuviera disponible.",
+    "solution": "Un flujo en n8n que recibe cada mensaje de WhatsApp por webhook de Twilio, arma el contexto con el historial, el catálogo, la configuración y los procedimientos guardados en PostgreSQL, y genera la respuesta con OpenAI. Si detecta un interesado lo guarda como lead, y con el modo humano un asesor toma la conversación y recibe el aviso.",
+    "result": "Atención automática en producción, con respuestas en unos 2,5 s de promedio, un flujo aparte para manejar errores y una tarea programada que depura las conversaciones antiguas.",
+    "stack": ["n8n", "Twilio · WhatsApp", "OpenAI", "PostgreSQL", "Webhooks"],
+    "links": [
+      {
+        "label": "Visitar sitio",
+        "url": ""
+      }
+    ]
+  },
+  {
+    "id": "finanzas",
+    "name": "Finanzas",
+    "kind": "Finanzas personales · multi-cuenta",
+    "problem": "Con varias deudas, metas de ahorro y gastos, decidir a dónde va el dinero que sobra cada mes se hace a ojo.",
+    "solution": "Un motor que reparte el excedente mensual por reglas —colchón, mínimos, deuda más cara— y un motor de decisiones que dice si una compra conviene.",
+    "result": "Cuentas privadas por invitación; el aislamiento entre cuentas se verifica en CI con una prueba que recorre todas las rutas de la API.",
+    "stack": ["NestJS", "TypeORM", "PostgreSQL", "React", "GitHub Actions", "Caddy"],
+    "links": [
+      {
+        "label": "Visitar sitio",
+        "url": "https://finanzas.controlapp.com.co"
+      }
+    ]
+  },
+  {
+    "id": "controlapp",
+    "name": "Controlapp",
+    "kind": "SaaS para gimnasios · multi-tenant",
+    "problem": "Los gimnasios de artes marciales controlan alumnos, pagos y vencimientos en hojas de cálculo y mensajes sueltos.",
+    "solution": "Plataforma multi-tenant para alumnos, membresías, pagos en línea con TuCompra, avisos de vencimiento por WhatsApp, SMS y correo, e historial de peleas por deportista.",
+    "result": "Varios gimnasios sobre la misma plataforma con datos aislados, en un monorepo NX con despliegue por GitHub Actions y GHCR.",
+    "stack": ["NX", "NestJS", "PostgreSQL", "React", "TanStack Query", "Twilio"],
+    "links": [
+      {
+        "label": "Visitar sitio",
+        "url": "https://controlapp.com.co"
+      }
+    ]
+  },
+  {
+    "id": "payments-gateway",
+    "name": "Payments Gateway",
+    "kind": "Microservicio de pagos",
+    "problem": "Cada aplicación integraba la pasarela por su cuenta, con código repetido y el historial de transacciones repartido.",
+    "solution": "Un gateway central: cada app se registra con su API key y su callback, el gateway habla con TuCompra, recibe el webhook y notifica el cambio de estado.",
+    "result": "Una sola integración y un solo historial de transacciones para Controlapp, Agendamiento y las apps que vengan.",
+    "stack": ["NestJS", "PostgreSQL", "Webhooks", "Docker", "GHCR"],
+    "links": [
+      {
+        "label": "Visitar sitio",
+        "url": ""
+      }
+    ]
+  },
+  {
+    "id": "dentalis",
+    "name": "Dentalis",
+    "kind": "SaaS clínico · multi-tenant",
+    "problem": "Los consultorios odontológicos llevan la historia clínica en papel o en herramientas que no modelan el diente ni sus caras.",
+    "solution": "Historia clínica digital con odontograma 3D interactivo por diente y por cara, anamnesis, plan de tratamiento, agenda y consentimientos firmados digitalmente con exportación a PDF.",
+    "result": "Cada organización vive en su propio schema de PostgreSQL, con una o varias sedes, y se despliega por imagen desde GHCR detrás de Caddy.",
+    "stack": ["NestJS", "Prisma", "PostgreSQL", "React", "react-three-fiber", "Docker"],
+    "links": [
+      {
+        "label": "Visitar sitio",
+        "url": "https://dentalis.controlapp.com.co"
+      }
+    ]
+  }
+]

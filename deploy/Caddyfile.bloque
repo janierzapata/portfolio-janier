@@ -1,0 +1,42 @@
+# El bloque del portafolio para /opt/proxy/Caddyfile.
+#
+# Va debajo de los que ya están, en el mismo estilo. Después:
+#   cd /opt/proxy
+#   docker compose exec caddy caddy reload --config /etc/caddy/Caddyfile
+#
+# ANTES de añadirlo, el registro A del dominio tiene que resolver a la IP del
+# VPS: Let's Encrypt valida por HTTP-01 y sin eso no emite el certificado (y
+# limita a cinco intentos fallidos por hora y dominio). Comprobar primero:
+#
+#   dig +short janier.controlapp.com.co
+#   curl -s ifconfig.me        # en el VPS: deben coincidir
+#
+
+# ── Portafolio ──────────────────────────────────────────────────────────────
+janier.controlapp.com.co {
+	encode zstd gzip
+	import seguras
+
+	# Content-Security-Policy propia. Es un sitio estático sin API, así que
+	# puede ser la más cerrada de todo el servidor:
+	#
+	#   script-src 'self'        nada inline, nada de CDN
+	#   style-src  'self'        los estilos salen del CSS compilado; React no
+	#                            escribe atributos style en este sitio
+	#   font-src   'self'        fuentes con @fontsource, servidas aquí
+	#   connect-src 'self'       la página no llama a ninguna API; 'self' y no
+	#                            'none' porque con 'none' Lighthouse y algunos
+	#                            rastreadores no logran leer robots.txt
+	#   frame-ancestors 'none'   no se puede embutir en un iframe ajeno
+	#   form-action 'self'       no hay formularios; si llega uno, a este origen
+	header Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"
+
+	reverse_proxy portfolio-web:8080
+
+	log {
+		output file /data/portfolio-acceso.log {
+			roll_size 20mb
+			roll_keep 10
+		}
+	}
+}

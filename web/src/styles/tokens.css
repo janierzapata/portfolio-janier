@@ -1,0 +1,153 @@
+/*
+ * Tokens del sitio. Fuente: design/DESIGN.md («Authkit — Frosted glass
+ * cathedral at midnight»).
+ *
+ * Es el ÚNICO archivo con valores sueltos (hex, px, sombras). Los componentes
+ * solo consumen estas variables; cambiar de DESIGN.md es cambiar este archivo.
+ *
+ * El sistema es solo oscuro, y el DESIGN.md pide expresamente no meter colores
+ * de modo claro en los tokens. Por eso no hay bloque `[data-theme="light"]`.
+ *
+ * Familias sustitutas (las originales son comerciales):
+ *   Untitled Sans → Inter · aeonikPro → Space Grotesk · dotDigital → JetBrains Mono
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* ── Colores ─────────────────────────────────────────────────────────── */
+  --color-canvas: #05060f; /* Midnight Canvas */
+  --color-steel: #2f343e; /* Steel Plate */
+  --color-shadow-tint: #3f4959; /* Gridline Blue */
+
+  /* Progresión de texto: titular → cuerpo → atenuado → ayuda */
+  --color-text-heading: #d8ecf8; /* Ice Highlight */
+  --color-text: #d1e4fa; /* Frost Glow */
+  --color-text-muted: #c7d3ea; /* Moon Mist */
+  --color-text-helper: #9da7ba; /* Fog Veil */
+  --color-text-strong: #ffffff; /* Pure White */
+  --color-icon-accent: #b6d9fc; /* Blueprint Blue */
+
+  /* Único acento cromático: solo el CTA principal */
+  --color-accent: #663af3; /* Void Violet */
+  --color-accent-hover: #7650f5;
+  --color-accent-contrast: #ffffff;
+
+  /* Vidrio */
+  --glass-edge: rgba(186, 215, 247, 0.12); /* hairline universal */
+  --glass-edge-strong: rgba(186, 215, 247, 0.24); /* foco / hover */
+  --glass-wash: rgba(186, 214, 247, 0.06); /* botón fantasma */
+  --glass-wash-hover: rgba(186, 214, 247, 0.12);
+  --glass-surface: rgba(186, 214, 247, 0.03); /* Frosted Glass */
+  --glass-deep: rgba(5, 6, 15, 0.97); /* Deep Glass */
+  --glass-nav: rgba(5, 6, 15, 0.72); /* barra fija: deja ver la rejilla */
+  --glass-badge: rgba(199, 211, 234, 0.12); /* Luminous Fill */
+  --grid-line: rgba(186, 215, 247, 0.06);
+
+  /* Gradientes */
+  --gradient-skywash: linear-gradient(0deg, #98c0ef 0%, #d8ecf8 100%);
+  --gradient-hairline: linear-gradient(
+    90deg,
+    transparent,
+    rgba(186, 215, 247, 0.12) 50%,
+    transparent
+  );
+  --gradient-spotlight: conic-gradient(
+    from 180deg at 50% -5%,
+    transparent 45%,
+    rgba(124, 145, 182, 0.3) 49%,
+    rgba(124, 145, 182, 0.5) 50%,
+    rgba(124, 145, 182, 0.3) 51%,
+    transparent 55%
+  );
+
+  /* ── Tipografía ──────────────────────────────────────────────────────── */
+  --font-sans:
+    'Inter Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, sans-serif;
+  --font-display: 'Space Grotesk', var(--font-sans);
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --text-caption: 0.75rem; /* 12 */
+  --leading-caption: 1.33;
+  --text-body-sm: 0.875rem; /* 14 */
+  --leading-body-sm: 1.43;
+  --text-body: 1rem; /* 16 */
+  --leading-body: 1.5;
+  --tracking-body: -0.01em;
+  --text-subheading: 1.125rem; /* 18 */
+  --leading-subheading: 1.33;
+  --text-heading-sm: 1.5rem; /* 24 */
+  --leading-heading-sm: 1.17;
+  --tracking-heading-sm: -0.01em;
+  --text-heading: 1.75rem; /* 28 */
+  --leading-heading: 1.14;
+  --text-heading-lg: 2.75rem; /* 44 */
+  --leading-heading-lg: 1.16;
+  --text-display: 3rem; /* 48 */
+  --leading-display: 1.17;
+  --text-eyebrow: 0.9375rem; /* 15 */
+  --tracking-eyebrow: 0.1em;
+  /* El wordmark del hero: el DESIGN.md lo extrapola a 140-180 px. En móvil
+     se encoge con el ancho para que el nombre no parta en tres líneas. */
+  --text-wordmark: clamp(3rem, 11vw, 8.75rem);
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  /* ── Espaciado (base 4 px) ───────────────────────────────────────────── */
+  --space-4: 0.25rem;
+  --space-8: 0.5rem;
+  --space-12: 0.75rem;
+  --space-16: 1rem;
+  --space-20: 1.25rem;
+  --space-24: 1.5rem;
+  --space-32: 2rem;
+  --space-40: 2.5rem;
+  --space-48: 3rem;
+  --space-56: 3.5rem;
+  --space-100: 6.25rem;
+  --space-120: 7.5rem;
+
+  --page-max: 1200px;
+  --text-max: 640px;
+  --page-gutter: var(--space-24);
+  --section-gap: var(--space-120);
+  --card-padding: var(--space-24);
+  --element-gap: var(--space-16);
+
+  /* ── Forma ───────────────────────────────────────────────────────────── */
+  --radius-card: 16px;
+  --radius-badge: 6px;
+  --radius-input: 6px;
+  --radius-button: 999px;
+  --radius-icon: 9999px;
+
+  /* Elevación: brillo interior + halo oscuro, nunca una sombra convencional */
+  --shadow-hairline: inset 0 0 0 1px var(--glass-edge);
+  --shadow-hairline-strong: inset 0 0 0 1px var(--glass-edge-strong);
+  --shadow-card:
+    inset 0 1px 1px rgba(199, 211, 234, 0.12), inset 0 24px 48px rgba(199, 211, 234, 0.05),
+    0 24px 32px rgba(6, 6, 14, 0.7);
+  --shadow-modal:
+    inset 0 1px 1px rgba(216, 236, 248, 0.2), inset 0 24px 48px rgba(168, 216, 245, 0.06),
+    0 16px 32px rgba(0, 0, 0, 0.3);
+  --shadow-badge:
+    inset 0 1px 1px rgba(216, 236, 248, 0.2), inset 0 0 0 1px rgba(199, 211, 234, 0.08);
+  --shadow-glow: 0 0 6px rgba(186, 207, 247, 0.32), 0 0 12px rgba(238, 186, 247, 0.24);
+
+  /* ── Movimiento ──────────────────────────────────────────────────────── */
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --duration: 180ms;
+}
+
+/* En pantallas angostas el ritmo «catedral» de 120 px se vuelve scroll vacío. */
+@media (max-width: 720px) {
+  :root {
+    --page-gutter: var(--space-16);
+    --section-gap: var(--space-100);
+    --text-heading-lg: 2.125rem;
+    --text-display: 2.25rem;
+  }
+}

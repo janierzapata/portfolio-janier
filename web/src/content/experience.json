@@ -1,0 +1,63 @@
+[
+  {
+    "company": "Lapeople CSC",
+    "title": "Ingeniero DevOps",
+    "start": "Abr. 2026",
+    "end": "",
+    "summary": "Infraestructura multinube (AWS y Azure) en producción y pruebas para varias empresas del grupo.",
+    "highlights": [
+      "Despliegue y operación de backends (Node.js, NestJS, Express) y frontends (Next.js, Angular) con Docker, Nginx y Traefik sobre servidores Linux y VPS.",
+      "Pipelines de CI/CD con GitHub Actions, administración de repositorios y gestión de secretos.",
+      "Aprovisionamiento en AWS (EC2, RDS, Session Manager) con convenciones de nombres y buenas prácticas de seguridad.",
+      "Automatización con Terraform y Ansible/AWX, centralizando la configuración."
+    ]
+  },
+  {
+    "company": "Affi",
+    "title": "Desarrollador FullStack",
+    "start": "Mar. 2025",
+    "end": "Mar. 2026",
+    "summary": "Aplicaciones front-end y back-end con .NET, Go y Angular sobre arquitectura de microservicios.",
+    "highlights": [
+      "Despliegue continuo con Terraform, Docker, Kubernetes y Azure DevOps.",
+      "Inicio de la migración de la aplicación: frontend en Angular y backend en NestJS, en un monorepo NX."
+    ]
+  },
+  {
+    "company": "Codesa",
+    "title": "Desarrollador FullStack",
+    "start": "Oct. 2024",
+    "end": "Mar. 2025",
+    "summary": "Aplicaciones con Java Spring Boot y Angular en una arquitectura de microservicios.",
+    "highlights": [
+      "Mensajería con Kafka y service discovery con Eureka y Consul.",
+      "Despliegue continuo con Jenkins, Harbor, Docker y Kubernetes."
+    ]
+  },
+  {
+    "company": "Tu Compra S.A.S",
+    "title": "Analista de Desarrollo",
+    "start": "Mar. 2024",
+    "end": "Sep. 2024",
+    "summary": "Corrección y optimización de servicios web en Spring Boot y Node.js, y mejoras de rendimiento en React y Angular.",
+    "highlights": []
+  },
+  {
+    "company": "Playtechnologies S.A.S",
+    "title": "Desarrollador FullStack",
+    "start": "Ago. 2022",
+    "end": "Mar. 2024",
+    "summary": "Soluciones a medida en frontend y backend, y despliegue y mantenimiento de servidores Linux (CentOS 7, Ubuntu).",
+    "highlights": [
+      "Reestructuración y optimización de aplicaciones en Spring Boot y Node.js, con mejoras de rendimiento en React, React Native y Angular."
+    ]
+  },
+  {
+    "company": "Tuviaje",
+    "title": "Desarrollador FullStack",
+    "start": "Dic. 2021",
+    "end": "Ago. 2022",
+    "summary": "Soluciones full-stack con Angular, React y React Native, y servicios en Node.js con GraphQL.",
+    "highlights": []
+  }
+]

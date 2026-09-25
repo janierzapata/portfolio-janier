@@ -1,0 +1,114 @@
+name: Despliegue
+
+# Se dispara con un tag `release-X.Y.Z` y **no construye nada**: busca la
+# imagen de ese commit y la levanta en el VPS. Lo que llega al servidor es
+# bit a bit lo que pasó por Integración.
+#
+#   git tag release-1.0.0 && git push origin release-1.0.0
+
+on:
+  push:
+    tags: ['release-*.*.*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+
+concurrency:
+  group: despliegue
+  cancel-in-progress: false
+
+env:
+  IMAGE: ghcr.io/${{ github.repository }}/web:${{ github.sha }}
+  DESTINO: /opt/portfolio
+
+jobs:
+  verificar:
+    name: Comprobar que existe la imagen
+    runs-on: ubuntu-latest
+    steps:
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: ¿Está publicada?
+        run: |
+          if ! docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
+            echo "No hay imagen para ${{ github.sha }}."
+            echo "Se publica al entrar a main: el tag tiene que apuntar a un"
+            echo "commit que ya pasó por ahí con la Integración en verde."
+            exit 1
+          fi
+          echo "ok  $IMAGE"
+
+  desplegar:
+    name: Desplegar en el VPS
+    runs-on: ubuntu-latest
+    needs: verificar
+    environment: produccion
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Escribir el .env de producción
+        run: |
+          cat > .env.prod << EOF
+          GITHUB_REPOSITORY=${{ github.repository }}
+          IMAGE_TAG=${{ github.sha }}
+          PROXY_NETWORK=${{ vars.PROXY_NETWORK || 'proxy' }}
+          EOF
+
+      - name: Preparar la carpeta en el VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            sudo mkdir -p ${{ env.DESTINO }}
+            sudo chown -R $USER:$USER ${{ env.DESTINO }}
+
+      - name: Copiar archivos
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          source: 'docker-compose.prod.yml,.env.prod'
+          target: ${{ env.DESTINO }}
+
+      - name: Levantar
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            set -e
+            cd ${{ env.DESTINO }}
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            # Para volver atrás sin adivinar qué había antes.
+            anterior=$(grep '^IMAGE_TAG=' .env 2>/dev/null | cut -d= -f2 || true)
+            [ -n "$anterior" ] && echo "$anterior" > .version-anterior
+
+            mv .env.prod .env
+            chmod 600 .env
+            docker compose -f docker-compose.prod.yml --env-file .env pull
+            docker compose -f docker-compose.prod.yml --env-file .env up -d --remove-orphans
+            docker logout ghcr.io
+
+            # Contra el contenedor, no contra el dominio: si falla, el problema
+            # es la imagen y no Caddy ni el DNS.
+            for i in $(seq 1 15); do
+              estado=$(docker inspect -f '{{.State.Health.Status}}' portfolio-web)
+              [ "$estado" = "healthy" ] && { echo "portfolio-web healthy"; docker image prune -f; exit 0; }
+              echo "  esperando ($i/15): $estado"
+              sleep 4
+            done
+            docker compose -f docker-compose.prod.yml logs --tail=40 web
+            exit 1
