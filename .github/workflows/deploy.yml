@@ -49,7 +49,7 @@ jobs:
     needs: verificar
     environment: produccion
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Escribir el .env de producción
         run: |
