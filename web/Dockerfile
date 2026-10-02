@@ -20,7 +20,7 @@ RUN npm run build
 # Rama estable vigente de nginx (una nueva cada abril). La 1.28 quedó sin
 # soporte en 2026 y ya no recibe parches. La variante `slim` no trae njs ni
 # módulos extra: menos paquetes, menos superficie para CVE.
-FROM nginxinc/nginx-unprivileged:1.30-alpine-slim
+FROM nginxinc/nginx-unprivileged:1.31-alpine-slim
 
 # La imagen base se publica cada tanto, pero Alpine saca parches de seguridad
 # a diario: sin esto Trivy encuentra CVE ya corregidos y frena la Integración.
